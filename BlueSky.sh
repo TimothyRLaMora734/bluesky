@@ -184,12 +184,9 @@ Check_Volume_Support()
 
 Check_Graphics_Card()
 {
-	echo ${text_progress}"> Detecting graphics card."${erase_style}
-	if [[ ! "$(system_profiler SPDisplaysDataType | grep Metal)" == *"Supported"* ]]; then
-		echo ${move_up}${erase_line}${text_success}"+ Not-Metal graphics card detected."${erase_style}
-	else
+	if [[ "$(system_profiler SPDisplaysDataType | grep Metal)" == *"Supported"* ]]; then
 		echo ${text_warning}"! Metal graphics card detected."${erase_style}
-		echo ${text_warning}"! This tool is not intended for Metal cards."${erase_style}
+		echo ${text_warning}"! These patches are not for Metal cards."${erase_style}
 		echo ${text_message}"/ Input an operation number."${erase_style}
 		echo ${text_message}"/     1 - Abort"${erase_style}
 		echo ${text_message}"/     2 - Proceed"${erase_style}
@@ -197,7 +194,7 @@ Check_Graphics_Card()
 		read -e -p "/ " operation_graphis_card
 		Input_Off
 
-		if [[ $operation == "1" ]]; then
+		if [[ $operation_graphis_card == "1" ]]; then
 			Input_On
 			exit
 		fi
