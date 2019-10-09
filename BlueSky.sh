@@ -169,8 +169,25 @@ Check_Volume_Version()
 	echo ${move_up}${erase_line}${text_success}"+ Checked system version."${erase_style}
 }
 
+Prepare_Options()
+{
+	if [[ $resources_check == "passed" ]]; then
+		Prepare_Resources
+	fi
+	if [[ $resources_check == "failed" ]]; then
+		Download_Resources
+	fi
+}
+
 Check_Volume_Support()
 {
+	if [[ -z $(ls "$patch_resources_path"/SkyLight/${!skylight_folder_build}/) || -z $(ls "$patch_resources_path"/HIToolbox/${!hitoolbox_folder_build}/) ]]; then
+		echo ${text_error}"- System support check failed."${erase_style}
+		echo ${text_message}"/ Run this tool on a supported system."${erase_style}
+		Input_On
+		exit
+	fi
+
 	echo ${text_progress}"> Checking system support."${erase_style}
 	if [[ $volume_version_short == "10.1"[4-5] ]]; then
 		echo ${move_up}${erase_line}${text_success}"+ System support check passed."${erase_style}
@@ -214,13 +231,6 @@ Input_Operation()
 	Input_On
 	read -e -p "/ " operation
 	Input_Off
-
-	if [[ $resources_check == "passed" ]]; then
-		Prepare_Resources
-	fi
-	if [[ $resources_check == "failed" ]]; then
-		Download_Resources
-	fi
 
 	if [[ $operation == "1" || $operation == "5" ]]; then
 		Backup_SkyLight
@@ -433,6 +443,7 @@ Check_Internet
 Check_Options
 Input_Volume
 Check_Volume_Version
+Prepare_Options
 Check_Volume_Support
 Check_Graphics_Card
 Input_Operation
