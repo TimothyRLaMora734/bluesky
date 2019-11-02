@@ -181,7 +181,7 @@ Prepare_Options()
 
 Check_Volume_Support()
 {
-	if [[ -d "$patch_resources_path"/SkyLight/${!skylight_folder_build} && -d "$patch_resources_path"/HIToolbox/${!hitoolbox_folder_build} ]]; then
+	if [[ ! -d "$patch_resources_path"/SkyLight/${!skylight_folder_build} || ! -d "$patch_resources_path"/HIToolbox/${!hitoolbox_folder_build} ]]; then
 		echo ${text_error}"- System support check failed."${erase_style}
 		echo ${text_message}"/ Run this tool on a supported system."${erase_style}
 		Input_On
