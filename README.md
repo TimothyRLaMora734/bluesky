@@ -4,7 +4,7 @@ BlueSky is a command-line patch tool for the SkyLight and HIToolbox frameworks. 
   
 # Usage
 
-chmod +x ./bluesky-release.sh —> makes the script executable
+chmod +x ./bluesky-release.sh —> makes the script executable  
 sudo ./bluesky-release.sh —> executes the script with root permissions  
   
 # Credits
