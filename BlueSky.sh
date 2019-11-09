@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 parameters="${1}${2}${3}${4}${5}${6}${7}${8}${9}"
 
@@ -62,13 +62,13 @@ Output_Off()
 
 Check_Environment()
 {
-	echo ${text_progress}"> Checking system environment."${erase_style}
+	echo -e ${text_progress}"> Checking system environment."${erase_style}
 	if [ ! -d /Install\ *.app ]; then
-		echo ${move_up}${erase_line}${text_success}"+ System environment check passed."${erase_style}
+		echo -e ${move_up}${erase_line}${text_success}"+ System environment check passed."${erase_style}
 	fi
 	if [ -d /Install\ *.app ]; then
-		echo ${text_error}"- System environment check failed."${erase_style}
-		echo ${text_message}"/ This tool is not supported in the Recovery environment."${erase_style}
+		echo -e ${text_error}"- System environment check failed."${erase_style}
+		echo -e ${text_message}"/ This tool is not supported in the Recovery environment."${erase_style}
 		Input_On
 		exit
 	fi
@@ -76,15 +76,15 @@ Check_Environment()
 
 Check_Root()
 {
-	echo ${text_progress}"> Checking for root permissions."${erase_style}
+	echo -e ${text_progress}"> Checking for root permissions."${erase_style}
 	if [[ $(whoami) == "root" ]]; then
 		root_check="passed"
-		echo ${move_up}${erase_line}${text_success}"+ Root permissions check passed."${erase_style}
+		echo -e ${move_up}${erase_line}${text_success}"+ Root permissions check passed."${erase_style}
 	fi
 	if [[ ! $(whoami) == "root" ]]; then
 		root_check="failed"
-		echo ${text_error}"- Root permissions check failed."${erase_style}
-		echo ${text_message}"/ Run this tool with root permissions."${erase_style}
+		echo -e ${text_error}"- Root permissions check failed."${erase_style}
+		echo -e ${text_message}"/ Run this tool with root permissions."${erase_style}
 		Input_On
 		exit
 	fi
@@ -92,12 +92,12 @@ Check_Root()
 
 Check_SIP()
 {
-	echo ${text_progress}"> Checking System Integrity Protection status."${erase_style}
+	echo -e ${text_progress}"> Checking System Integrity Protection status."${erase_style}
 	if [[ $(csrutil status | grep status) == *disabled* || $(csrutil status | grep status) == *unknown* ]]; then
-		echo ${move_up}${erase_line}${text_success}"+ System Integrity Protection status check passed."${erase_style}
+		echo -e ${move_up}${erase_line}${text_success}"+ System Integrity Protection status check passed."${erase_style}
 	else
-		echo ${text_error}"- System Integrity Protection status check failed."${erase_style}
-		echo ${text_message}"/ Run this tool with System Integrity Protection disabled."${erase_style}
+		echo -e ${text_error}"- System Integrity Protection status check failed."${erase_style}
+		echo -e ${text_message}"/ Run this tool with System Integrity Protection disabled."${erase_style}
 		Input_On
 		exit
 	fi
@@ -105,25 +105,25 @@ Check_SIP()
 
 Check_Resources()
 {
-	echo ${text_progress}"> Checking for resources."${erase_style}
+	echo -e ${text_progress}"> Checking for resources."${erase_style}
 	if [[ -d "$patch_resources_path" && -d "$revert_resources_path" ]]; then
 		resources_check="passed"
-		echo ${move_up}${erase_line}${text_success}"+ Resources check passed."${erase_style}
+		echo -e ${move_up}${erase_line}${text_success}"+ Resources check passed."${erase_style}
 	fi
 	if [[ ! -d "$patch_resources_path" || ! -d "$revert_resources_path" ]]; then
 		resources_check="failed"
-		echo ${text_error}"- Resources check failed."${erase_style}
+		echo -e ${text_error}"- Resources check failed."${erase_style}
 	fi
 }
 
 Check_Internet()
 {
-	echo ${text_progress}"> Checking for internet connectivity."${erase_style}
+	echo -e ${text_progress}"> Checking for internet connectivity."${erase_style}
 	if [[ $(ping -c 5 www.google.com) == *transmitted* && $(ping -c 5 www.google.com) == *received* ]]; then
-		echo ${move_up}${erase_line}${text_success}"+ Internet connectivity check passed."${erase_style}
+		echo -e ${move_up}${erase_line}${text_success}"+ Internet connectivity check passed."${erase_style}
 		internet_check="passed"
 	else
-		echo ${text_error}"- Internet connectivity check failed."${erase_style}
+		echo -e ${text_error}"- Internet connectivity check failed."${erase_style}
 		internet_check="failed"
 	fi
 }
@@ -131,8 +131,8 @@ Check_Internet()
 Check_Options()
 {
 	if [[ $resources_check == "failed" && $internet_check == "failed" ]]; then
-		echo ${text_error}"- Resources check and internet connectivity check failed"${erase_style}
-		echo ${text_message}"/ Run this tool with the required resources and/or an internet connection."${erase_style}
+		echo -e ${text_error}"- Resources check and internet connectivity check failed"${erase_style}
+		echo -e ${text_message}"/ Run this tool with the required resources and/or an internet connection."${erase_style}
 		Input_On
 		exit
 	fi
@@ -140,12 +140,12 @@ Check_Options()
 
 Input_Volume()
 {
-	echo ${text_message}"/ What volume would you like to use?"${erase_style}
-	echo ${text_message}"/ Input a volume name."${erase_style}
+	echo -e ${text_message}"/ What volume would you like to use?"${erase_style}
+	echo -e ${text_message}"/ Input a volume name."${erase_style}
 	for volume_path in /Volumes/*; do 
 		volume_name="${volume_path#/Volumes/}"
 		if [[ ! "$volume_name" == com.apple* ]]; then
-			echo ${text_message}"/     ${volume_name}"${erase_style} | sort -V
+			echo -e ${text_message}"/     ${volume_name}"${erase_style} | sort -V
 		fi
 	done
 	Input_On
@@ -161,12 +161,12 @@ Input_Volume()
 
 Check_Volume_Version()
 {
-	echo ${text_progress}"> Checking system version."${erase_style}	
+	echo -e ${text_progress}"> Checking system version."${erase_style}	
 	volume_version="$(defaults read "$volume_path"/System/Library/CoreServices/SystemVersion.plist ProductVersion)"
 	volume_version_short="$(defaults read "$volume_path"/System/Library/CoreServices/SystemVersion.plist ProductVersion | cut -c-5)"
 
 	volume_build="$(defaults read "$volume_path"/System/Library/CoreServices/SystemVersion.plist ProductBuildVersion)"
-	echo ${move_up}${erase_line}${text_success}"+ Checked system version."${erase_style}
+	echo -e ${move_up}${erase_line}${text_success}"+ Checked system version."${erase_style}
 }
 
 Prepare_Options()
@@ -181,19 +181,19 @@ Prepare_Options()
 
 Check_Volume_Support()
 {
-	if [[ ! -d "$patch_resources_path"/SkyLight/${!skylight_folder_build} || ! -d "$patch_resources_path"/HIToolbox/${!hitoolbox_folder_build} ]]; then
-		echo ${text_error}"- System support check failed."${erase_style}
-		echo ${text_message}"/ Run this tool on a supported system."${erase_style}
+	if [[ ! -d "$patch_resources_path"/SkyLight/${!skylight_folder_version} || !  -d "$revert_resources_path"/SkyLight/${!skylight_folder_version} ]]; then
+		echo -e ${text_error}"- System support check failed."${erase_style}
+		echo -e ${text_message}"/ Run this tool on a supported system."${erase_style}
 		Input_On
 		exit
 	fi
 
-	echo ${text_progress}"> Checking system support."${erase_style}
+	echo -e ${text_progress}"> Checking system support."${erase_style}
 	if [[ $volume_version_short == "10.1"[4-5] ]]; then
-		echo ${move_up}${erase_line}${text_success}"+ System support check passed."${erase_style}
+		echo -e ${move_up}${erase_line}${text_success}"+ System support check passed."${erase_style}
 	else
-		echo ${text_error}"- System support check failed."${erase_style}
-		echo ${text_message}"/ Run this tool on a supported system."${erase_style}
+		echo -e ${text_error}"- System support check failed."${erase_style}
+		echo -e ${text_message}"/ Run this tool on a supported system."${erase_style}
 		Input_On
 		exit
 	fi
@@ -202,11 +202,11 @@ Check_Volume_Support()
 Check_Graphics_Card()
 {
 	if [[ "$(system_profiler SPDisplaysDataType | grep Metal)" == *"Supported"* ]]; then
-		echo ${text_warning}"! Metal graphics card detected."${erase_style}
-		echo ${text_warning}"! These patches are not for Metal cards."${erase_style}
-		echo ${text_message}"/ Input an operation number."${erase_style}
-		echo ${text_message}"/     1 - Abort"${erase_style}
-		echo ${text_message}"/     2 - Proceed"${erase_style}
+		echo -e ${text_warning}"! Metal graphics card detected."${erase_style}
+		echo -e ${text_warning}"! These patches are not for Metal cards."${erase_style}
+		echo -e ${text_message}"/ Input an operation number."${erase_style}
+		echo -e ${text_message}"/     1 - Abort"${erase_style}
+		echo -e ${text_message}"/     2 - Proceed"${erase_style}
 		Input_On
 		read -e -p "/ " operation_graphis_card
 		Input_Off
@@ -220,89 +220,47 @@ Check_Graphics_Card()
 
 Input_Operation()
 {
-	echo ${text_message}"/ What operation would you like to run?"${erase_style}
-	echo ${text_message}"/ Input an operation number."${erase_style}
-	echo ${text_message}"/     1 - Install SkyLight patch"${erase_style}
-	echo ${text_message}"/     2 - Remove SkyLight patch"${erase_style}
-	echo ${text_message}"/     3 - Install HIToolbox patch"${erase_style}
-	echo ${text_message}"/     4 - Remove HIToolbox patch"${erase_style}
-	echo ${text_message}"/     5 - Install both patches"${erase_style}
-	echo ${text_message}"/     6 - Remove both patches"${erase_style}
+	echo -e ${text_message}"/ What operation would you like to run?"${erase_style}
+	echo -e ${text_message}"/ Input an operation number."${erase_style}
+	echo -e ${text_message}"/     1 - Install SkyLight patch"${erase_style}
+	echo -e ${text_message}"/     2 - Remove SkyLight patch"${erase_style}
 	Input_On
 	read -e -p "/ " operation
 	Input_Off
 
-	if [[ $operation == "1" || $operation == "5" ]]; then
-		Backup_SkyLight
+	if [[ $operation == "1" ]]; then
 		Patch_SkyLight
-		Backup_New_SkyLight
 	fi
-	if [[ $operation == "2" || $operation == "6" ]]; then
-		Backup_SkyLight
+	if [[ $operation == "2" ]]; then
 		Remove_SkyLight
-		Backup_New_SkyLight
-	fi
-
-	if [[ $operation == "3" || $operation == "5" ]]; then
-		Backup_HIToolbox
-		Patch_HIToolbox
-		Backup_New_HIToolbox
-	fi
-	if [[ $operation == "4" || $operation == "6" ]]; then
-		Backup_HIToolbox
-		Remove_HIToolbox
-		Backup_New_HIToolbox
 	fi
 }
 
 Prepare_Resources()
 {
-	echo ${text_progress}"> Preparing local resources."${erase_style}
+	echo -e ${text_progress}"> Preparing local resources."${erase_style}
 	chmod +x "$directory_path"/resources/skylight_var.sh
-	chmod +x "$directory_path"/resources/hitoolbox_var.sh
-	
 	source "$directory_path"/resources/skylight_var.sh
-	source "$directory_path"/resources/hitoolbox_var.sh
-	echo ${move_up}${erase_line}${text_success}"+ Prepared local resources."${erase_style}
+	echo -e ${move_up}${erase_line}${text_success}"+ Prepared local resources."${erase_style}
 }
 
 Download_Resources()
 {
-	echo ${text_progress}"> Downloading internet resources."${erase_style}
-	curl -L -s -o /tmp/bluesky-resources.zip https://github.com/rmc-team/bluesky-resources/archive/master.zip
-	unzip -q /tmp/bluesky-resources.zip -d /tmp
+	echo -e ${text_progress}"> Downloading internet resources."${erase_style}
+	curl -L -s -o /tmp/bluesky.zip https://github.com/rmc-team/bluesky/archive/master.zip
+	unzip -q /tmp/bluesky.zip -d /tmp
 
-	patch_resources_path="/tmp/bluesky-resources-master/resources/patch"
-	revert_resources_path="/tmp/bluesky-resources-master/resources/revert"
+	patch_resources_path="/tmp/bluesky-master/resources/patch"
+	revert_resources_path="/tmp/bluesky-master/resources/revert"
 
-	chmod +x /tmp/bluesky-resources-master/resources/skylight_var.sh
-	chmod +x /tmp/bluesky-resources-master/resources/hitoolbox_var.sh
-
-	source /tmp/bluesky-resources-master/resources/skylight_var.sh
-	source /tmp/bluesky-resources-master/resources/hitoolbox_var.sh
-	echo ${move_up}${erase_line}${text_success}"+ Downloaded internet resources."${erase_style}
-}
-
-Backup_SkyLight()
-{
-	echo ${text_progress}"> Backing up current SkyLight."${erase_style}
-	if [[ -e "$volume_path"/Users/Shared/SkyLight-Backup ]]; then
-		rm "$volume_path"/Users/Shared/SkyLight-Backup
-	fi
-
-	if [[ $volume_version_short == "10.14" ]]; then
-		cp "$volume_path"/System/Library/PrivateFrameworks/SkyLight.framework/Versions/A/SkyLight "$volume_path"/Users/Shared/SkyLight-Backup
-	fi
-
-	if [[ $volume_version_short == "10.15" ]]; then
-		cp "$volume_path"/System/Library/PrivateFrameworks/SkyLight.framework/Versions/A/SkyLightOriginal "$volume_path"/Users/Shared/SkyLight-Backup
-	fi
-	echo ${move_up}${erase_line}${text_success}"+ Backed up current SkyLight."${erase_style}
+	chmod +x /tmp/bluesky-master/resources/skylight_var.sh
+	source /tmp/bluesky-master/resources/skylight_var.sh
+	echo -e ${move_up}${erase_line}${text_success}"+ Downloaded internet resources."${erase_style}
 }
 
 Patch_SkyLight()
 {
-	echo ${text_progress}"> Installing SkyLight patch."${erase_style}
+	echo -e ${text_progress}"> Installing SkyLight patch."${erase_style}
 	if [[ $volume_version_short == "10.14" ]]; then
 		rm "$volume_path"/System/Library/PrivateFrameworks/SkyLight.framework/Versions/A/SkyLight
 		cp "$patch_resources_path"/SkyLight/${!skylight_folder_version}/SkyLight "$volume_path"/System/Library/PrivateFrameworks/SkyLight.framework/Versions/A
@@ -310,14 +268,14 @@ Patch_SkyLight()
 
 	if [[ $volume_version_short == "10.15" ]]; then
 		rm "$volume_path"/System/Library/PrivateFrameworks/SkyLight.framework/Versions/A/SkyLightOriginal
-		cp "$patch_resources_path"/SkyLight/${!skylight_folder_build}/SkyLightOriginal "$volume_path"/System/Library/PrivateFrameworks/SkyLight.framework/Versions/A
+		cp "$patch_resources_path"/SkyLight/${!skylight_folder_version}/SkyLightOriginal "$volume_path"/System/Library/PrivateFrameworks/SkyLight.framework/Versions/A
 	fi
-	echo ${move_up}${erase_line}${text_success}"+ Installed SkyLight patch."${erase_style}
+	echo -e ${move_up}${erase_line}${text_success}"+ Installed SkyLight patch."${erase_style}
 }
 
 Remove_SkyLight()
 {
-	echo ${text_progress}"> Removing SkyLight patch."${erase_style}
+	echo -e ${text_progress}"> Removing SkyLight patch."${erase_style}
 	if [[ $volume_version_short == "10.14" ]]; then
 		rm "$volume_path"/System/Library/PrivateFrameworks/SkyLight.framework/Versions/A/SkyLight
 		cp "$revert_resources_path"/SkyLight/${!skylight_folder_version}/SkyLight "$volume_path"/System/Library/PrivateFrameworks/SkyLight.framework/Versions/A
@@ -325,42 +283,14 @@ Remove_SkyLight()
 
 	if [[ $volume_version_short == "10.15" ]]; then
 		rm "$volume_path"/System/Library/PrivateFrameworks/SkyLight.framework/Versions/A/SkyLightOriginal
-		cp "$revert_resources_path"/SkyLight/${!skylight_folder_build}/SkyLightOriginal "$volume_path"/System/Library/PrivateFrameworks/SkyLight.framework/Versions/A
+		cp "$revert_resources_path"/SkyLight/${!skylight_folder_version}/SkyLightOriginal "$volume_path"/System/Library/PrivateFrameworks/SkyLight.framework/Versions/A
 	fi
-	echo ${move_up}${erase_line}${text_success}"+ Removed SkyLight patch."${erase_style}
-}
-
-Backup_New_SkyLight()
-{
-	echo ${text_progress}"> Backing up new SkyLight."${erase_style}
-	if [[ -e "$volume_path"/Users/Shared/SkyLight-BlueSky ]]; then
-		rm "$volume_path"/Users/Shared/SkyLight-BlueSky
-	fi
-
-	if [[ $volume_version_short == "10.14" ]]; then
-		cp "$volume_path"/System/Library/PrivateFrameworks/SkyLight.framework/Versions/A/SkyLight "$volume_path"/Users/Shared/SkyLight-BlueSky
-	fi
-
-	if [[ $volume_version_short == "10.15" ]]; then
-		cp "$volume_path"/System/Library/PrivateFrameworks/SkyLight.framework/Versions/A/SkyLightOriginal "$volume_path"/Users/Shared/SkyLight-BlueSky
-	fi
-	echo ${move_up}${erase_line}${text_success}"+ Backed up new SkyLight."${erase_style}
-}
-
-Backup_HIToolbox()
-{
-	echo ${text_progress}"> Backing up current HIToolbox."${erase_style}
-	if [[ -e "$volume_path"/Users/Shared/HIToolbox-Backup ]]; then
-		rm "$volume_path"/Users/Shared/HIToolbox-Backup
-	fi
-
-	cp "$volume_path"/System/Library/Frameworks/Carbon.framework/Frameworks/HIToolbox.framework/Versions/A/HIToolbox "$volume_path"/Users/Shared/HIToolbox-Backup
-	echo ${move_up}${erase_line}${text_success}"+ Backed up current HIToolbox."${erase_style}
+	echo -e ${move_up}${erase_line}${text_success}"+ Removed SkyLight patch."${erase_style}
 }
 
 Patch_HIToolbox()
 {
-	echo ${text_progress}"> Installing HIToolbox patch."${erase_style}
+	echo -e ${text_progress}"> Installing HIToolbox patch."${erase_style}
 	if [[ $volume_version_short == "10.14" ]]; then
 		rm "$volume_path"/System/Library/Frameworks/Carbon.framework/Frameworks/HIToolbox.framework/Versions/A/HIToolbox
 		cp "$patch_resources_path"/HIToolbox/${!hitoolbox_folder_version}/HIToolbox "$volume_path"/System/Library/Frameworks/Carbon.framework/Frameworks/HIToolbox.framework/Versions/A
@@ -370,12 +300,12 @@ Patch_HIToolbox()
 		rm "$volume_path"/System/Library/Frameworks/Carbon.framework/Frameworks/HIToolbox.framework/Versions/A/HIToolbox
 		cp "$patch_resources_path"/HIToolbox/${!hitoolbox_folder_build}/HIToolbox "$volume_path"/System/Library/Frameworks/Carbon.framework/Frameworks/HIToolbox.framework/Versions/A
 	fi
-	echo ${move_up}${erase_line}${text_success}"+ Installed HIToolbox patch."${erase_style}
+	echo -e ${move_up}${erase_line}${text_success}"+ Installed HIToolbox patch."${erase_style}
 }
 
 Remove_HIToolbox()
 {
-	echo ${text_progress}"> Removing HIToolbox patch."${erase_style}
+	echo -e ${text_progress}"> Removing HIToolbox patch."${erase_style}
 	if [[ $volume_version_short == "10.14" ]]; then
 		rm "$volume_path"/System/Library/Frameworks/Carbon.framework/Frameworks/HIToolbox.framework/Versions/A/HIToolbox
 		cp "$revert_resources_path"/HIToolbox/${!hitoolbox_folder_version}/HIToolbox "$volume_path"/System/Library/Frameworks/Carbon.framework/Frameworks/HIToolbox.framework/Versions/A
@@ -385,18 +315,7 @@ Remove_HIToolbox()
 		rm "$volume_path"/System/Library/Frameworks/Carbon.framework/Frameworks/HIToolbox.framework/Versions/A/HIToolbox
 		cp "$revert_resources_path"/HIToolbox/${!hitoolbox_folder_build}/HIToolbox "$volume_path"/System/Library/Frameworks/Carbon.framework/Frameworks/HIToolbox.framework/Versions/A
 	fi
-	echo ${move_up}${erase_line}${text_success}"+ Removed HIToolbox patch."${erase_style}
-}
-
-Backup_New_HIToolbox()
-{
-	echo ${text_progress}"> Backing up new HIToolbox."${erase_style}
-	if [[ -e "$volume_path"/Users/Shared/HIToolbox-BlueSky ]]; then
-		rm "$volume_path"/Users/Shared/HIToolbox-BlueSky
-	fi
-
-	cp "$volume_path"/System/Library/Frameworks/Carbon.framework/Frameworks/HIToolbox.framework/Versions/A/HIToolbox "$volume_path"/Users/Shared/HIToolbox-BlueSky
-	echo ${move_up}${erase_line}${text_success}"+ Backed up new HIToolbox."${erase_style}
+	echo -e ${move_up}${erase_line}${text_success}"+ Removed HIToolbox patch."${erase_style}
 }
 
 Repair()
@@ -407,25 +326,25 @@ Repair()
 
 Repair_Permissions()
 {
-	echo ${text_progress}"> Repairing permissions."${erase_style}
+	echo -e ${text_progress}"> Repairing permissions."${erase_style}
 	Repair "$volume_path"/System/Library/PrivateFrameworks/SkyLight.framework
 	Repair "$volume_path"/System/Library/Frameworks/Carbon.framework/Frameworks/HIToolbox.framework
-	echo ${move_up}${erase_line}${text_success}"+ Repaired permissions."${erase_style}
+	echo -e ${move_up}${erase_line}${text_success}"+ Repaired permissions."${erase_style}
 }
 
 Restart()
 {
-	echo ${text_progress}"> Removing temporary files."${erase_style}
-	Output_Off rm /tmp/bluesky-resources.zip
-	Output_Off rm -R /tmp/bluesky-resources-master
-	echo ${move_up}${erase_line}${text_success}"+ Removed temporary files."${erase_style}
+	echo -e ${text_progress}"> Removing temporary files."${erase_style}
+	Output_Off rm /tmp/bluesky.zip
+	Output_Off rm -R /tmp/bluesky-master
+	echo -e ${move_up}${erase_line}${text_success}"+ Removed temporary files."${erase_style}
 
 	if [[ $(diskutil info "$volume_name"|grep "Mount Point") == *"/" && ! $(diskutil info "$volume_name"|grep "Mount Point") == *"/Volumes" ]]; then
-		echo ${text_message}"/ Your machine will restart soon."${erase_style}
-		echo ${text_message}"/ Thank you for using BlueSky."${erase_style}
+		echo -e ${text_message}"/ Your machine will restart soon."${erase_style}
+		echo -e ${text_message}"/ Thank you for using BlueSky."${erase_style}
 		reboot
 	else
-		echo ${text_message}"/ Thank you for using BlueSky."${erase_style}
+		echo -e ${text_message}"/ Thank you for using BlueSky."${erase_style}
 		Input_On
 		exit
 	fi
